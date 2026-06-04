@@ -81,7 +81,7 @@ FoodMart
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/foodmart-ecommerce.git
+git clone https://github.com/sharmasiddhi2302-maker/foodmart-ecommerce.git
 ```
 
 ### 2. Navigate to Project Directory
