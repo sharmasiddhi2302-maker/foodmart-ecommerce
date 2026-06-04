@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food - Groceries & Food</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <!-- MESSAGE ALERTS -->
+    {% if messages %}
+    <div style="max-width: 1000px; margin: auto; padding: 10px;">
+        {% for message in messages %}
+        <div style="background-color: #d4edda; color: #155724; padding: 12px; border-radius: 5px; margin-bottom: 10px; text-align: center;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <!-- LOGO -->
+        <div class="logo-area">
+            <a href="/" class="logo">FoodCart</a>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="search-bar">
+            <form action="{% url 'search' %}" method="get">
+                <input type="text" name="q" placeholder="Search for products..." required>
+            </form>
+        </div>
+
+        <!-- USER ACTIONS -->
+        <div class="header-actions">
+
+            <!-- PROFILE -->
+            <a href="{% url 'profile' %}" class="profile-icon">
+
+                {% if request.user.is_authenticated and request.user.userprofile.image %}
+                    <img src="{{ request.user.userprofile.image.url }}"
+                         style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                {% else %}
+                    👤
+                {% endif %}
+
+            </a>
+
+            <!-- CART -->
+            <a href="{% url 'cart_view' %}" class="cart-link">
+                🛒
+                <span class="cart-count">0</span>
+            </a>
+
+            {% if user.is_authenticated %}
+                <span class="user-name">Hi, {{ user.username }}</span>
+
+                <form action="{% url 'logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="auth-link logout-btn">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+                <a href="{% url 'login' %}" class="auth-link">Login</a>
+            {% endif %}
+
+        </div>
+
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        © 2026 FoodCart - Instant groceries & food delivery
+    </footer>
+
+    <!-- JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

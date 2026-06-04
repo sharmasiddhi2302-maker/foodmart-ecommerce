@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="category-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h4>{{ category.name }}</h4>
+
+        <a href="{% url 'category_products' category.slug %}" 
+           {% if not selected_subcategory %}class="active"{% endif %}>
+           All
+        </a>
+
+        {% for sub in subcategories %}
+            <a href="?subcategory={{ sub.slug }}" 
+               {% if selected_subcategory == sub.slug %}class="active"{% endif %}>
+               {{ sub.name }}
+            </a>
+        {% endfor %}
+
+        <div style="margin-top: 1.5rem;">
+            <h4>Other Products</h4>
+            <a href="#">Fruits and Vegetables</a>
+            <a href="#">Groceries</a>
+            <a href="#">Dairy Products</a>
+            <a href="#">Cold Drinks and Juices</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <h1 style="font-size: 1.8rem; margin-bottom: 1rem;">
+            {{ category.name }}
+        </h1>
+
+        <!-- PRODUCT GRID -->
+        <div class="product-grid">
+
+            {% for product in products %}
+
+            <div class="product-card-wrapper">
+
+                <!-- CLICKABLE CARD -->
+                <a href="{% url 'product_detail' product.slug %}" class="product-card-link">
+                    <div class="product-card">
+                        <img src="{{ product.image.url }}" class="product-img">
+
+                        <div class="product-info">
+                            <div class="product-name">{{ product.name }}</div>
+                            
+                            <div class="product-price">₹{{ product.effective_price }}</div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- CART BUTTON -->
+                 
+                <div class="cart-action" id="cart-action-{{ product.id }}">
+    <!-- ADD BUTTON -->
+                    <button onclick="addToCart('{{ product.id }}')"class="add-btn">ADD</button>
+                 
+                </div>
+
+            </div>
+
+            {% empty %}
+                <p>No products found.</p>
+            {% endfor %}
+
+        </div>
+
+    </div> 
+
+</div> 
+
+{% endblock %}

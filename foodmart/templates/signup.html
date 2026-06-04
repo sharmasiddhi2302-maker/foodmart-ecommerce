@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <h2>Create Account</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'success' %}success-box{% else %}error-box{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="error-box">
+            {{ form.errors }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input-row">
+                <label>Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="input-row">
+                <label>Password</label>
+                {{ form.password1 }}
+            </div>
+
+            <div class="input-row">
+                <label>Confirm Password</label>
+                {{ form.password2 }}
+            </div>
+
+            <button type="submit" class="btn-auth">Sign Up</button>
+        </form>
+
+        <p class="switch-link">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

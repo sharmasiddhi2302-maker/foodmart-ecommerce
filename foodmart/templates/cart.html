@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Your Cart</h2>
+
+{% if items %}
+
+<table class="cart-table">
+
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in items %}
+        <tr>
+
+            <!-- Product -->
+            <td class="product-cell">
+                <img src="{{ item.product.image.url }}" class="cart-img">
+                <span>{{ item.product.name }}</span>
+            </td>
+
+            <!-- Price -->
+            <td>₹{{ item.product.effective_price }}</td>
+
+            <!-- Quantity -->
+            <td>
+                <div class="qty-box">
+                    <button onclick="updateQty('{{ item.product.id }}', -1)">-</button>
+                    <span id="qty-{{ item.product.id }}">{{ item.quantity }}</span>
+
+                    <button onclick="updateQty('{{ item.product.id }}', 1)">+</button>
+                </div>
+
+            </td>
+
+            <!-- Total -->
+            <td id="total-{{ item.product.id }}">
+                ₹{{ item.total_price }}</td>
+
+
+            <!-- Remove Button -->
+            <td>
+                <form method="POST"
+                      action="{% url 'remove_cart_item' item.id %}"
+                      onsubmit="return handleRemoveSubmit(this)"">
+                    
+                    {% csrf_token %}
+                    
+                    <button type="submit"
+                            class="add-btn remove-item"
+                            style="background: #dc3545;">
+                        Remove
+                    </button>
+
+                </form>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    <!-- Footer -->
+    <tfoot>
+        <tr>
+            <td colspan="3" style="text-align: right;">Total</td>
+            <td colspan="2">₹{{ total }}</td>
+        </tr>
+    </tfoot>
+
+</table>
+
+<!-- Checkout Button -->
+<a href="{% url 'checkout' %}"
+   class="add-btn"
+   style="float: none; margin-top: 1rem;">
+   Proceed to Checkout
+</a>
+
+{% else %}
+
+<p>Your cart is empty. <a href="/">Continue shopping</a></p>
+
+{% endif %}
+
+
+<!-- ✅ Loader (OUTSIDE TABLE) -->
+<div id="loader" style="
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    z-index: 1000;">
+    Removing item...
+</div>
+
+
+
+{% endblock %}

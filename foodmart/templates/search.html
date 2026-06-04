@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Search results for "{{ query }}"</h2>
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <img src="{{ product.image.url }}" class="product-img">
+        <div class="product-info">
+            <div class="product-name">{{ product.name }}</div>
+            <div class="product-price">₹{{ product.effective_price }}</div>
+            <a href="{% url 'product_detail' product.slug %}" class="add-btn" style="background: #007bff;">View</a>
+        </div>
+    </div>
+    {% empty %}
+        <p>No products found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

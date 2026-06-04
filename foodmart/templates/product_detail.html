@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="product-container">
+
+    <!-- LEFT: IMAGE -->
+    <div class="product-image-box">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+
+    <!-- RIGHT: INFO -->
+    <div class="product-info-box">
+
+        <!-- BREADCRUMB -->
+        <div class="pd-breadcrumb">
+
+            <a href="{% url 'home' %}">Home</a>
+            ›
+
+            <a href="{% url 'category_products' product.subcategory.category.slug %}">
+                {{ product.subcategory.category.name }}
+            </a>
+            ›
+
+            <span>
+                {{ product.subcategory.name }}
+            </span>
+
+        </div>
+
+        <!-- TITLE -->
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <!-- QTY -->
+        <p class="product-qty">
+            {{ product.quantity }} {{ product.unit }}
+        </p>
+
+        <!-- PRICE -->
+        <div class="price-box">
+
+            <span class="price">
+                ₹{{ product.effective_price }}
+            </span>
+
+            {% if product.discounted_price %}
+                <span class="old-price">
+                    ₹{{ product.price }}
+                </span>
+            {% endif %}
+
+        </div>
+
+        <!-- ADD TO CART -->
+        <div id="cart-action-{{ product.id }}">
+            <button onclick="addToCart('{{ product.id }}')" class="btn-add">
+                ADD
+            </button>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="description-box">
+
+            <h3>Description</h3>
+
+            <div class="desc-text">
+                {{ product.description|linebreaks }}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

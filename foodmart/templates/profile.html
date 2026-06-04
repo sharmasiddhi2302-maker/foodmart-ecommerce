@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="profile-wrapper">
+
+```
+<!-- LEFT SIDEBAR -->
+<div class="profile-sidebar">
+
+    <div class="profile-avatar">
+        {% if profile.image %}
+            <img src="{{ profile.image.url }}">
+        {% else %}
+            👤
+        {% endif %}
+    </div>
+
+    <h3>{{ request.user.username }}</h3>
+    <p>{{ request.user.email }}</p>
+
+</div>
+
+<!-- RIGHT CONTENT -->
+<div class="profile-content">
+
+    <!-- EDIT PROFILE -->
+    <div class="card">
+
+        <h3>Edit Profile</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Name</label>
+            <input type="text" name="name" value="{{ profile.name }}">
+
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ profile.phone }}">
+
+            <label>Address</label>
+            <textarea name="address">{{ profile.address }}</textarea>
+
+            <label>Profile Image</label>
+            <input type="file" name="image">
+
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+
+    </div>
+    
+    <!-- ORDER HISTORY -->
+    <div class="card">
+        <h3>My Orders</h3>
+
+        {% for order in orders %}
+            <div class="order-box" style="border:1px solid #ddd; padding:15px; margin-bottom:20px; border-radius:10px;">
+
+                <!-- ORDER INFO -->
+                <div style="margin-bottom:10px;">
+                    <b>Order ID:</b> {{ order.id }} |
+                    <b>Status:</b> {{ order.status }} |
+                    <b>Total:</b> ₹{{ order.total_price }} <br>
+                    <small>{{ order.created_at }}</small>
+                </div>
+
+                <hr>
+
+                <!-- PRODUCTS -->
+                {% for item in order.items.all %}
+                    <div style="display:flex; gap:15px; align-items:center; margin-bottom:10px;">
+
+                        <!-- CLICKABLE IMAGE -->
+                        <a href="{{ item.product.get_absolute_url }}">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" width="60" height="60" style="border-radius:8px;">
+                            {% else %}
+                                <img src="/static/images/no-image.png" width="60" height="60">
+                            {% endif %}
+                        </a>
+
+                        <!-- DETAILS -->
+                        <div>
+                            <!-- CLICKABLE NAME -->
+                            <a href="{{ item.product.get_absolute_url }}" style="text-decoration:none; color:black;">
+                                <p><b>{{ item.product.name }}</b></p>
+                            </a>
+
+                            <p>Qty: {{ item.quantity }}</p>
+                            <p>Price: ₹{{ item.price }}</p>
+                        </div>
+                        <{% if order.status != 'cancelled' %}
+                        <form method="POST" action="{% url 'cancel_order' order.id %}">
+                             {% csrf_token %}
+                            <button>Cancel Order</button>
+                        </form>
+                        {% endif %}
+
+
+                    </div>
+                {% empty %}
+                    <p>No products in this order</p>
+                {% endfor %}
+
+            </div>
+        {% empty %}
+            <p>No orders yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- LOGOUT BUTTON -->
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

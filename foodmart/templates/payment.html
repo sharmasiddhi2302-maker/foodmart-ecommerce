@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Secure Payment</title>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #f4f6f9;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .card {
+        background: #fff;
+        padding: 35px;
+        width: 380px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .logo {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .amount {
+        font-size: 30px;
+        font-weight: bold;
+        color: #2e7d32;
+        margin: 20px 0;
+    }
+
+    .btn-pay {
+        width: 100%;
+        background: linear-gradient(135deg, #3399cc, #287aa9);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-pay:hover {
+        transform: scale(1.03);
+    }
+
+    .secure {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .divider {
+        margin: 20px 0;
+        height: 1px;
+        background: #eee;
+    }
+
+</style>
+```
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="card">
+
+```
+    <div class="logo">🛒 FoodMart</div>
+    <div class="subtitle">Secure checkout powered by Razorpay</div>
+
+    <div class="divider"></div>
+
+    <div class="amount">₹{% widthratio amount 100 1 %}</div>
+
+    <button id="pay-btn" class="btn-pay">Pay Now</button>
+
+    <div class="secure">🔒 100% Secure Payment</div>
+
+</div>
+```
+
+</div>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "order_id": "{{ razorpay_order_id }}",
+
+    "name": "FoodMart",
+    "description": "Order Payment",
+
+    "method": {
+        "upi": true,
+        "card": true,
+        "netbanking": true,
+        "wallet": true
+    },
+
+    "config": {
+        "display": {
+            "blocks": {
+                "upi": {
+                    "name": "Pay using UPI",
+                    "instruments": [
+                        {
+                            "method": "upi"
+                        }
+                    ]
+                }
+            },
+            "sequence": ["block.upi"],
+            "preferences": {
+                "show_default_blocks": true
+            }
+        }
+    },
+
+    "handler": function (response){
+        window.location.href =
+        "/payment-success/?payment_id=" +
+        response.razorpay_payment_id +
+        "&order_id=" +
+        response.razorpay_order_id +
+        "&signature=" +
+        response.razorpay_signature;
+    },
+
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

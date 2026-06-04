@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="background: white; border-radius: 20px; padding: 2rem; max-width: 800px; margin: auto;">
+    <h2>Checkout</h2>
+
+    {% if items %}
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+        <thead>
+            <tr style="border-bottom: 1px solid #ccc;">
+                <th style="text-align:left;">Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td>{{ item.product.name }}</td>
+                <td>₹{{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+            
+
+        </tbody>
+    </table>
+
+    <p style="text-align: right; font-size: 1.2rem;">Total Amount: <strong>₹{{ total }}</strong></p>
+
+    <form method="post" style="text-align: right;">
+        {% csrf_token %}
+        <button type="submit" class="add-btn" style="background: #28a745; color:white; padding: 0.5rem 1rem; border:none; border-radius: 5px;">
+            Place Order (Demo)
+        </button>
+    </form>
+    {% else %}
+    <p>Your cart is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}
